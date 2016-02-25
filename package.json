@@ -1,0 +1,16 @@
+{
+  "name": "pg-node-test",
+  "description": "Fucking around with Postgres and Node",
+  "version": "0.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "pg": "4.x",
+    "express": "latest"
+  },
+  "engines": {
+    "node": "0.12.2"
+  }
+}
