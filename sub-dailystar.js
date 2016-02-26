@@ -8,7 +8,8 @@ console.log("Subapp DailyStar running.");
 
 app.get('/dailystar/get', function(req, res) {
 	console.log('Daily Star get request received for ' + JSON.stringify(req.query) + '.');
-	console.log(req.query.date);
+	var date = req.query.date.slice(8) + req.query.date.slice(5,7) + req.query.date.slice(0,4);
+	getDate(date);
 	//res.sendFile(__dirname + '/subapps/kahraba/input.html');
 });
 
@@ -32,7 +33,7 @@ function getLinks(date) {
 }
 
 function putData(urls) {
-	if urls = 'Uh-oh' {
+	if (urls == 'Uh-oh') {
 		console.log('We can’t get data from pages because we didn’t get the urls!');
 	} else {
 		for (i = 0; i < urls.length; i++) {
