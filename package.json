@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "pg": "4.x",
-    "express": "latest"
+    "express": "latest",
+    "request": "latest",
+    "cheerio": "latest"
   },
   "engines": {
     "node": "0.12.2"

@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 
 //Sub-apps
-var postgres = require('./sub-postgres');
+var postgres = require('./sub-dailystar');
 app.use(postgres);
 
 //Default path
