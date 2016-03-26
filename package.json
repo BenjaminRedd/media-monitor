@@ -1,7 +1,15 @@
 {
-  "name": "pg-node-test",
-  "description": "Fucking around with Postgres and Node",
-  "version": "0.0.0",
+  "name": "lebanon-media-monitor",
+  "description": "Monitors Lebanese English-language news",
+  "version": "1.0.0",
+  "author": "Benjamin Redd",
+  "contributors": [
+    {
+      "name": "Benjamin Redd",
+      "email": "benjamin.redd@gmail.com"
+    }
+  ],
+  "license": "Public Domain",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

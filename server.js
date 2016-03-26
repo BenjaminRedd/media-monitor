@@ -2,8 +2,8 @@ var express = require('express');
 var app = express();
 
 //Sub-apps
-var postgres = require('./sub-dailystar');
-app.use(postgres);
+var mediamonitor = require('./media-monitor');
+app.use(mediamonitor);
 
 //Default path
 app.use(express.static('public'));

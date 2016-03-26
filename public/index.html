@@ -1,26 +1,87 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Daily Star Monitor | Admin</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="/style.css">
-		<link href='https://fonts.googleapis.com/css?family=Averia+Serif+Libre:400,400italic,700' rel='stylesheet' type='text/css'>
+		<title>Daily Star Monitor</title>
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+		<link rel='stylesheet' type='text/css' href='/style.css'>
+		<link href='https://fonts.googleapis.com/css?family=Catamaran:500' rel='stylesheet' type='text/css'>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js'></script>
+		<script src='https://d3js.org/d3.v3.min.js'></script>
 		<script>
-			window.onload = function() {
-				var height = document.getElementsByTagName("HEADER")[0].offsetHeight;
-				document.getElementsByTagName("ARTICLE")[0].style.marginTop = (20 + height) + 'px';
+			$(document).ready(function() {
+				getData('', drawChart);
+				//var height = document.getElementsByTagName('header')[0].offsetHeight;
+				//document.getElementsByTagName('main')[0].style.marginTop = (20 + height) + 'px';
+
+			});
+
+			function getData(req, callback) {
+				if (req) req = '?' + req;
+				$.get('/dailystar/get' + req, function(response, status) {
+            		console.log(response);
+            		$('#absval h2').html(response.abs);
+            		$('#pctval h2').html(response.pct + '%');
+            		callback(response);
+        		});
+			}
+
+			function drawChart(rawdata) {
+				// First, sort our timeseries (which may have been pulled out of the database in the wrong order)
+				var data = [];
+				for (i in rawdata.series) {
+					data.push([new Date(i), rawdata.series[i]]);
+				}
+				data.sort(function(a, b) {
+					if (a[0] > b[0]) return 1;
+					if (a[0] < b[0]) return -1;
+					return 0;
+				});
+
+				// Then do a chart
+				var width = 1000;
+				var height = 400;
+				var padding = 20;
+
+				var timeStart = new Date(1998, 4, 11);
+				var timeEnd = new Date(2016, 2, 23);
+
+				var x = d3.time.scale().range([0, width]);
+				var y = d3.scale.linear().range([height, 250]);
+
+				x.domain(d3.extent(data, function(d) { return d[0]; }));
+				y.domain(d3.extent(data, function(d) { return d[1]; }));
+				
+				var container = d3.select('#time')
+					.append('svg')
+						.attr('width', width + padding)
+						.attr('height', height + padding);
+
+				var line = d3.svg.area()
+					.x(function(d) { return x(d[0]); })
+					.y0(height)
+					.y1(function(d) { return y(d[1]); })
+					.interpolate('linear');
+
+				container.append('path')
+					.attr('d', line(data))
+					.attr('class', 'line');
 			}
 		</script>
 	</head>
 	<body>
 		<header>
-			<h1>Daily Star Monitor</h1>
+			<h1>The Daily Star Monitor</h1>
 		</header>
-		<article>
-			<form action="dailystar/get">
-				<input type="date" name="date">
-				<input type="submit" value="Get data">
-			</form>
-		</article>
+		<main>
+			<div id='absval' class='bignumber absolute'>
+				<h2>N</h2>
+				<span>Average number of original articles per day over the past 30 days</span>
+			</div>
+			<div id='pctval' class='bignumber percent'>
+				<h2>%</h2>
+				<span>Original articles as a percent of all articles over the past 30 days</span>
+			</div>
+			<div id='time' class='time'></div>
+		</main>
 	</body>
 </html>
